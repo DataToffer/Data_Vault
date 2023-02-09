@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="Data_Vault" id="Project-2488" database="Snowflake" >
+	<schema name="L10_RDV" catalogname="DATA_VAULT_DEV" options="DATA_VAULT_DEV.L10_RDV COMMENT=&#039;Schema for Raw Data\nVault objects&#039;" >
+		<table name="HUB_CUSTOMER" spec=" or replace" >
+			<column name="SHA1_HUB_CUSTOMER" type="binary" length="8388608" jt="-2" mandatory="y" />
+			<column name="C_CUSTKEY" type="integer" length="38" decimal="0" jt="4" mandatory="y" />
+			<column name="LDTS" type="timestamp_ntz" length="9" jt="93" mandatory="y" />
+			<column name="RSCR" type="varchar" length="16777216" jt="12" mandatory="y" />
+			<index name="PK_HUB_CUSTOMER" unique="PRIMARY_KEY" >
+				<column name="SHA1_HUB_CUSTOMER" />
+			</index>
+		</table>
+		<table name="HUB_ORDER" spec=" or replace" >
+			<column name="SHA1_HUB_ORDER" type="binary" length="8388608" jt="-2" mandatory="y" />
+			<column name="O_ORDERKEY" type="integer" length="38" decimal="0" jt="4" mandatory="y" />
+			<column name="LDTS" type="timestamp_ntz" length="9" jt="93" mandatory="y" />
+			<column name="RSCR" type="varchar" length="16777216" jt="12" mandatory="y" />
+			<index name="PK_HUB_ORDER" unique="PRIMARY_KEY" >
+				<column name="SHA1_HUB_ORDER" />
+			</index>
+		</table>
+		<table name="LNK_CUSTOMER_ORDER" spec=" or replace" >
+			<column name="SHA1_LNK_CUSTOMER_ORDER" type="binary" length="8388608" jt="-2" mandatory="y" />
+			<column name="SHA1_HUB_CUSTOMER" type="binary" length="8388608" jt="-2" />
+			<column name="SHA1_HUB_ORDER" type="binary" length="8388608" jt="-2" />
+			<column name="LDTS" type="timestamp_ntz" length="9" jt="93" mandatory="y" />
+			<column name="RSCR" type="varchar" length="16777216" jt="12" mandatory="y" />
+			<index name="PK_LNK_CUSTOMER_ORDER" unique="PRIMARY_KEY" >
+				<column name="SHA1_LNK_CUSTOMER_ORDER" />
+			</index>
+			<fk name="FK2_LNK_CUSTOMER_ORDER" to_schema="DATA_VAULT_DEV.L10_RDV" to_table="HUB_ORDER" options="" >
+				<fk_column name="SHA1_HUB_ORDER" pk="SHA1_HUB_ORDER" />
+			</fk>
+			<fk name="FK1_LNK_CUSTOMER_ORDER" to_schema="DATA_VAULT_DEV.L10_RDV" to_table="HUB_CUSTOMER" options="" >
+				<fk_column name="SHA1_HUB_CUSTOMER" pk="SHA1_HUB_CUSTOMER" />
+			</fk>
+		</table>
+		<table name="REF_NATION" spec=" or replace" >
+			<column name="NATIONCODE" type="integer" length="38" decimal="0" jt="4" mandatory="y" />
+			<column name="REGIONCODE" type="integer" length="38" decimal="0" jt="4" />
+			<column name="LDTS" type="timestamp_ntz" length="9" jt="93" />
+			<column name="RSCR" type="varchar" length="16777216" jt="12" mandatory="y" />
+			<column name="N_NAME" type="varchar" length="16777216" jt="12" />
+			<column name="N_COMMENT" type="varchar" length="16777216" jt="12" />
+			<index name="PK_REF_NATION" unique="PRIMARY_KEY" >
+				<column name="NATIONCODE" />
+			</index>
+			<fk name="FK_REF_REGION" to_schema="DATA_VAULT_DEV.L10_RDV" to_table="REF_REGION" options="" >
+				<fk_column name="REGIONCODE" pk="REGIONCODE" />
+			</fk>
+		</table>
+		<table name="REF_REGION" spec=" or replace" >
+			<column name="REGIONCODE" type="integer" length="38" decimal="0" jt="4" mandatory="y" />
+			<column name="LDTS" type="timestamp_ntz" length="9" jt="93" />
+			<column name="RSCR" type="varchar" length="16777216" jt="12" mandatory="y" />
+			<column name="R_NAME" type="varchar" length="16777216" jt="12" />
+			<column name="R_COMMENT" type="varchar" length="16777216" jt="12" />
+			<index name="PK_REF_REGION" unique="PRIMARY_KEY" >
+				<column name="REGIONCODE" />
+			</index>
+		</table>
+		<table name="SAT_CUSTOMER" spec=" or replace" >
+			<column name="SHA1_HUB_CUSTOMER" type="binary" length="8388608" jt="-2" mandatory="y" />
+			<column name="LDTS" type="timestamp_ntz" length="9" jt="93" mandatory="y" />
+			<column name="C_NAME" type="varchar" length="16777216" jt="12" />
+			<column name="C_ADDRESS" type="varchar" length="16777216" jt="12" />
+			<column name="C_PHONE" type="varchar" length="16777216" jt="12" />
+			<column name="C_ACCTBAL" type="integer" length="38" decimal="0" jt="4" />
+			<column name="C_MKTSEGMENT" type="varchar" length="16777216" jt="12" />
+			<column name="C_COMMENT" type="varchar" length="16777216" jt="12" />
+			<column name="NATIONCODE" type="integer" length="38" decimal="0" jt="4" />
+			<column name="HASH_DIFF" type="binary" length="8388608" jt="-2" mandatory="y" />
+			<column name="RSCR" type="varchar" length="16777216" jt="12" mandatory="y" />
+			<index name="PK_SAT_CUSTOMER" unique="PRIMARY_KEY" >
+				<column name="SHA1_HUB_CUSTOMER" />
+				<column name="LDTS" />
+			</index>
+			<fk name="FK_SAT_CUSTOMER" to_schema="DATA_VAULT_DEV.L10_RDV" to_table="HUB_CUSTOMER" options="" >
+				<fk_column name="SHA1_HUB_CUSTOMER" pk="SHA1_HUB_CUSTOMER" />
+			</fk>
+		</table>
+		<table name="SAT_ORDER" spec=" or replace" >
+			<column name="SHA1_HUB_ORDER" type="binary" length="8388608" jt="-2" mandatory="y" />
+			<column name="LDTS" type="timestamp_ntz" length="9" jt="93" mandatory="y" />
+			<column name="O_ORDERSTATUS" type="varchar" length="16777216" jt="12" />
+			<column name="O_TOTALPRICE" type="integer" length="38" decimal="0" jt="4" />
+			<column name="O_ORDERDATE" type="date" jt="91" />
+			<column name="O_ORDERPRIORITY" type="varchar" length="16777216" jt="12" />
+			<column name="O_CLERK" type="varchar" length="16777216" jt="12" />
+			<column name="O_SHIPPRIORITY" type="integer" length="38" decimal="0" jt="4" />
+			<column name="O_COMMENT" type="varchar" length="16777216" jt="12" />
+			<column name="HASH_DIFF" type="binary" length="8388608" jt="-2" mandatory="y" />
+			<column name="RSCR" type="varchar" length="16777216" jt="12" mandatory="y" />
+			<index name="PK_SAT_ORDER" unique="PRIMARY_KEY" >
+				<column name="SHA1_HUB_ORDER" />
+				<column name="LDTS" />
+			</index>
+			<fk name="FK_SAT_ORDER" to_schema="DATA_VAULT_DEV.L10_RDV" to_table="HUB_ORDER" options="" >
+				<fk_column name="SHA1_HUB_ORDER" pk="SHA1_HUB_ORDER" />
+			</fk>
+		</table>
+	</schema>
+	<schema name="L20_BDV" catalogname="DATA_VAULT_DEV" options="DATA_VAULT_DEV.L20_BDV COMMENT=&#039;Schema for Business\nData Vault objects&#039;" >
+		<table name="SAT_ORDER_BV" spec=" or replace" >
+			<column name="SHA1_HUB_ORDER" type="binary" length="8388608" jt="-2" mandatory="y" />
+			<column name="LDTS" type="timestamp_ntz" length="9" jt="93" mandatory="y" />
+			<column name="O_ORDERSTATUS" type="varchar" length="16777216" jt="12" />
+			<column name="O_TOTALPRICE" type="integer" length="38" decimal="0" jt="4" />
+			<column name="O_ORDERDATE" type="date" jt="91" />
+			<column name="O_ORDERPRIORITY" type="varchar" length="16777216" jt="12" />
+			<column name="O_CLERK" type="varchar" length="16777216" jt="12" />
+			<column name="O_SHIPPRIORITY" type="integer" length="38" decimal="0" jt="4" />
+			<column name="O_COMMENT" type="varchar" length="16777216" jt="12" />
+			<column name="HASH_DIFF" type="binary" length="8388608" jt="-2" mandatory="y" />
+			<column name="RSCR" type="varchar" length="16777216" jt="12" mandatory="y" />
+			<column name="ORDER_PRIORITY_BUCKET" type="varchar" length="16777216" jt="12" />
+			<index name="PK_SAT_ORDER" unique="PRIMARY_KEY" >
+				<column name="SHA1_HUB_ORDER" />
+				<column name="LDTS" />
+			</index>
+			<fk name="FK_SAT_ORDER" to_schema="DATA_VAULT_DEV.L10_RDV" to_table="HUB_ORDER" options="" >
+				<fk_column name="SHA1_HUB_ORDER" pk="SHA1_HUB_ORDER" />
+			</fk>
+		</table>
+		<view name="SAT_CUSTOMER_BV" >
+			<view_script><![CDATA[create or replace view ${fullName}( SHA1_HUB_CUSTOMER,  LDTS,  C_NAME,  C_ADDRESS,  C_PHONE,  C_ACCTBAL,  C_MKTSEGMENT,  C_COMMENT,  NATIONCODE,  RSCR,  NATION_NAME,  REGION_NAME) as SELECT RSC.SHA1_HUB_CUSTOMER, RSC.LDTS, RSC.C_NAME, RSC.C_ADDRESS, RSC.C_PHONE, RSC.C_ACCTBAL, RSC.C_MKTSEGMENT, RSC.C_COMMENT, RSC.NATIONCODE, RSC.RSCR, RRN.N_NAME NATION_NAME, RRR.R_NAME REGION_NAME FROM L10_RDV.SAT_CUSTOMER RSC LEFT OUTER JOIN L10_RDV.REF_NATION RRN ON (RSC.NATIONCODE = RRN.NATIONCODE) LEFT OUTER JOIN L10_RDV.REF_REGION RRR ON (RRN.REGIONCODE = RRR.REGIONCODE)
+CREATE OR REPLACE VIEW DATA_VAULT_DEV.${fullName}
+AS
+SELECT RSC.SHA1_HUB_CUSTOMER, RSC.LDTS, RSC.C_NAME,
+RSC.C_ADDRESS, RSC.C_PHONE,
+RSC.C_ACCTBAL, RSC.C_MKTSEGMENT, RSC.C_COMMENT,
+RSC.NATIONCODE, RSC.RSCR,
+-- derived
+RRN.N_NAME NATION_NAME,
+RRR.R_NAME REGION_NAME
+FROM L10_RDV.SAT_CUSTOMER RSC
+LEFT OUTER JOIN L10_RDV.REF_NATION RRN
+ON (RSC.NATIONCODE = RRN.NATIONCODE)
+LEFT OUTER JOIN L10_RDV.REF_REGION RRR
+ON (RRN.REGIONCODE = RRR.REGIONCODE)]]></view_script>
+		</view>
+		<view name="SAT_CUSTOMER_BV_CURR_VW" >
+			<view_script><![CDATA[create or replace view ${fullName}( SHA1_HUB_CUSTOMER,  LDTS,  C_NAME,  C_ADDRESS,  C_PHONE,  C_ACCTBAL,  C_MKTSEGMENT,  C_COMMENT,  NATIONCODE,  RSCR,  NATION_NAME,  REGION_NAME) as SELECT * FROM SAT_CUSTOMER_BV QUALIFY LEAD(LDTS) OVER (PARTITION BY SHA1_HUB_CUSTOMER ORDER BY LDTS) IS NULL
+CREATE VIEW DATA_VAULT_DEV.${fullName}
+AS
+SELECT * FROM SAT_CUSTOMER_BV
+QUALIFY LEAD(LDTS) OVER (PARTITION BY SHA1_HUB_CUSTOMER ORDER
+BY LDTS) IS NULL]]></view_script>
+		</view>
+		<view name="SAT_ORDER_BV_CURR_VW" >
+			<view_script><![CDATA[create or replace view ${fullName}( SHA1_HUB_ORDER,  LDTS,  O_ORDERSTATUS,  O_TOTALPRICE,  O_ORDERDATE,  O_ORDERPRIORITY,  O_CLERK,  O_SHIPPRIORITY,  O_COMMENT,  HASH_DIFF,  RSCR,  ORDER_PRIORITY_BUCKET) as SELECT * FROM SAT_ORDER_BV QUALIFY LEAD(LDTS) OVER (PARTITION BY SHA1_HUB_ORDER ORDER BY LDTS) IS NULL
+CREATE OR REPLACE VIEW DATA_VAULT_DEV.${fullName}
+AS
+SELECT * FROM SAT_ORDER_BV
+QUALIFY LEAD(LDTS) OVER (PARTITION BY SHA1_HUB_ORDER ORDER BY
+LDTS) IS NULL]]></view_script>
+		</view>
+	</schema>
+	<schema name="L30_INFO" catalogname="DATA_VAULT_DEV" options="DATA_VAULT_DEV.L30_INFO COMMENT=&#039;Schema for Information\nDelivery objects&#039;" >
+		<view name="DIM1_CUSTOMER" >
+			<view_script><![CDATA[create or replace view ${fullName}( DIM_CUSTOMER_KEY,  EFFECTIVE_DTS,  CUSTOMER_ID,  RECORD_SOURCE,  SHA1_HUB_CUSTOMER,  LDTS,  C_NAME,  C_ADDRESS,  C_PHONE,  C_ACCTBAL,  C_MKTSEGMENT,  C_COMMENT,  NATIONCODE,  RSCR,  NATION_NAME,  REGION_NAME) as SELECT HUB.SHA1_HUB_CUSTOMER AS DIM_CUSTOMER_KEY, SAT.LDTS AS EFFECTIVE_DTS, HUB.C_CUSTKEY AS CUSTOMER_ID, SAT.RSCR AS RECORD_SOURCE, SAT.* FROM L10_RDV.HUB_CUSTOMER HUB, L20_BDV.SAT_CUSTOMER_BV_CURR_VW SAT WHERE HUB.SHA1_HUB_CUSTOMER = SAT.SHA1_HUB_CUSTOMER
+CREATE OR REPLACE VIEW DATA_VAULT_DEV.${fullName}
+AS
+SELECT
+HUB.SHA1_HUB_CUSTOMER AS DIM_CUSTOMER_KEY,
+SAT.LDTS AS EFFECTIVE_DTS,
+HUB.C_CUSTKEY AS CUSTOMER_ID,
+SAT.RSCR AS RECORD_SOURCE,
+SAT.*
+FROM
+L10_RDV.HUB_CUSTOMER HUB,
+L20_BDV.SAT_CUSTOMER_BV_CURR_VW SAT
+WHERE HUB.SHA1_HUB_CUSTOMER = SAT.SHA1_HUB_CUSTOMER]]></view_script>
+			<column name="DIM_CUSTOMER_KEY" type="binary" />
+			<column name="EFFECTIVE_DTS" type="TIMESTAMPNTZ" />
+			<column name="CUSTOMER_ID" type="integer" />
+			<column name="RECORD_SOURCE" type="varchar" />
+			<column name="SHA1_HUB_CUSTOMER" type="binary" />
+			<column name="LDTS" type="TIMESTAMPNTZ" />
+			<column name="C_NAME" type="varchar" />
+			<column name="C_ADDRESS" type="varchar" />
+			<column name="C_PHONE" type="varchar" />
+			<column name="C_ACCTBAL" type="integer" />
+			<column name="C_MKTSEGMENT" type="varchar" />
+			<column name="C_COMMENT" type="varchar" />
+			<column name="NATIONCODE" type="integer" />
+			<column name="RSCR" type="varchar" />
+			<column name="NATION_NAME" type="varchar" />
+			<column name="REGION_NAME" type="varchar" />
+		</view>
+		<view name="DIM1_ORDER" >
+			<view_script><![CDATA[create or replace view ${fullName}( DIM_ORDER_KEY,  EFFECTIVE_DTS,  ORDER_ID,  RECORD_SOURCE,  SHA1_HUB_ORDER,  LDTS,  O_ORDERSTATUS,  O_TOTALPRICE,  O_ORDERDATE,  O_ORDERPRIORITY,  O_CLERK,  O_SHIPPRIORITY,  O_COMMENT,  HASH_DIFF,  RSCR,  ORDER_PRIORITY_BUCKET) as SELECT HUB.SHA1_HUB_ORDER AS DIM_ORDER_KEY, SAT.LDTS AS EFFECTIVE_DTS, HUB.O_ORDERKEY AS ORDER_ID, SAT.RSCR AS RECORD_SOURCE, SAT.* FROM L10_RDV.HUB_ORDER HUB, L20_BDV.SAT_ORDER_BV_CURR_VW SAT WHERE HUB.SHA1_HUB_ORDER = SAT.SHA1_HUB_ORDER
+CREATE OR REPLACE VIEW DATA_VAULT_DEV.${fullName}
+AS
+SELECT
+HUB.SHA1_HUB_ORDER AS DIM_ORDER_KEY,
+SAT.LDTS AS EFFECTIVE_DTS,
+HUB.O_ORDERKEY AS ORDER_ID,
+SAT.RSCR AS RECORD_SOURCE,
+SAT.*
+FROM
+L10_RDV.HUB_ORDER HUB,
+L20_BDV.SAT_ORDER_BV_CURR_VW SAT
+WHERE HUB.SHA1_HUB_ORDER = SAT.SHA1_HUB_ORDER]]></view_script>
+			<column name="DIM_ORDER_KEY" type="binary" />
+			<column name="EFFECTIVE_DTS" type="TIMESTAMPNTZ" />
+			<column name="ORDER_ID" type="integer" />
+			<column name="RECORD_SOURCE" type="varchar" />
+			<column name="SHA1_HUB_ORDER" type="binary" />
+			<column name="LDTS" type="TIMESTAMPNTZ" />
+			<column name="O_ORDERSTATUS" type="varchar" />
+			<column name="O_TOTALPRICE" type="integer" />
+			<column name="O_ORDERDATE" type="date" />
+			<column name="O_ORDERPRIORITY" type="varchar" />
+			<column name="O_CLERK" type="varchar" />
+			<column name="O_SHIPPRIORITY" type="integer" />
+			<column name="O_COMMENT" type="varchar" />
+			<column name="HASH_DIFF" type="binary" />
+			<column name="RSCR" type="varchar" />
+			<column name="ORDER_PRIORITY_BUCKET" type="varchar" />
+		</view>
+		<view name="FCT_CUSTOMER_ORDER" >
+			<view_script><![CDATA[create or replace view ${fullName}( EFFECTIVE_DTS,  RECORD_SOURCE,  DIM_CUSTOMER_KEY,  DIM_ORDER_KEY) as SELECT LNK.LDTS AS EFFECTIVE_DTS, LNK.RSCR AS RECORD_SOURCE, LNK.SHA1_HUB_CUSTOMER AS DIM_CUSTOMER_KEY, LNK.SHA1_HUB_ORDER AS DIM_ORDER_KEY FROM L10_RDV.LNK_CUSTOMER_ORDER LNK
+CREATE OR REPLACE VIEW DATA_VAULT_DEV.${fullName}
+AS
+SELECT
+LNK.LDTS AS EFFECTIVE_DTS,
+LNK.RSCR AS RECORD_SOURCE,
+LNK.SHA1_HUB_CUSTOMER AS DIM_CUSTOMER_KEY,
+LNK.SHA1_HUB_ORDER AS DIM_ORDER_KEY
+-- this is a factless fact, but here you can add any measures, calculated or derived
+FROM L10_RDV.LNK_CUSTOMER_ORDER LNK]]></view_script>
+			<column name="EFFECTIVE_DTS" type="TIMESTAMPNTZ" />
+			<column name="RECORD_SOURCE" type="varchar" />
+			<column name="DIM_CUSTOMER_KEY" type="binary" />
+			<column name="DIM_ORDER_KEY" type="binary" />
+		</view>
+	</schema>
+	<connector name="Data_Vault" database="Snowflake" driver_class="net.snowflake.client.jdbc.SnowflakeDriver" driver_jar="snowflake-jdbc-3.13.25.jar" driver_desc="Standard" host="nn97657.switzerland-north.azure.snowflakecomputing.com" port="443" instance="DATA_VAULT_DEV" user="Tofferiel" passwd="Z29NT1JBTlQxMiE=" useSystemProxy="false" />
+	<layout name="L10_RDV" id="Layout-1f81" show_relation="columns" >
+		<entity schema="DATA_VAULT_DEV.L30_INFO" name="DIM1_CUSTOMER" color="3986C1" x="1072" y="464" />
+		<entity schema="DATA_VAULT_DEV.L30_INFO" name="DIM1_ORDER" color="3986C1" x="864" y="464" />
+		<entity schema="DATA_VAULT_DEV.L30_INFO" name="FCT_CUSTOMER_ORDER" color="3986C1" x="992" y="816" />
+		<entity schema="DATA_VAULT_DEV.L10_RDV" name="HUB_CUSTOMER" color="3986C1" x="48" y="480" />
+		<entity schema="DATA_VAULT_DEV.L10_RDV" name="HUB_ORDER" color="3986C1" x="304" y="480" />
+		<entity schema="DATA_VAULT_DEV.L10_RDV" name="LNK_CUSTOMER_ORDER" color="3986C1" x="528" y="480" />
+		<entity schema="DATA_VAULT_DEV.L10_RDV" name="REF_NATION" color="3986C1" x="736" y="80" />
+		<entity schema="DATA_VAULT_DEV.L10_RDV" name="REF_REGION" color="3986C1" x="896" y="80" />
+		<entity schema="DATA_VAULT_DEV.L10_RDV" name="SAT_CUSTOMER" color="3986C1" x="64" y="672" />
+		<entity schema="DATA_VAULT_DEV.L10_RDV" name="SAT_ORDER" color="3986C1" x="288" y="752" />
+		<entity schema="DATA_VAULT_DEV.L20_BDV" name="SAT_ORDER_BV" color="3986C1" x="288" y="160" />
+		<group name="Information Vault" color="C4E0F9" >
+			<entity schema="DATA_VAULT_DEV.L30_INFO" name="FCT_CUSTOMER_ORDER" />
+			<entity schema="DATA_VAULT_DEV.L30_INFO" name="DIM1_CUSTOMER" />
+			<entity schema="DATA_VAULT_DEV.L30_INFO" name="DIM1_ORDER" />
+		</group>
+		<group name="Rauw Data Vault" color="C4E0F9" >
+			<entity schema="DATA_VAULT_DEV.L10_RDV" name="HUB_CUSTOMER" />
+			<entity schema="DATA_VAULT_DEV.L10_RDV" name="HUB_ORDER" />
+			<entity schema="DATA_VAULT_DEV.L10_RDV" name="LNK_CUSTOMER_ORDER" />
+			<entity schema="DATA_VAULT_DEV.L10_RDV" name="SAT_CUSTOMER" />
+			<entity schema="DATA_VAULT_DEV.L10_RDV" name="SAT_ORDER" />
+		</group>
+		<group name="Business Vault" color="C4E0F9" >
+			<entity schema="DATA_VAULT_DEV.L20_BDV" name="SAT_ORDER_BV" />
+		</group>
+		<group name="References" color="C4E0F9" >
+			<entity schema="DATA_VAULT_DEV.L10_RDV" name="REF_NATION" />
+			<entity schema="DATA_VAULT_DEV.L10_RDV" name="REF_REGION" />
+		</group>
+	</layout>
+	<layout name="~Layout with Sample Tools" id="Layout-5f0" show_column_type="y" show_relation="columns" >
+		<script name="SQL Editor" id="Editor-6f2" language="SQL" >
+			<string><![CDATA[SELECT
+	SHA1_HUB_CUSTOMER, C_CUSTKEY, LDTS, RSCR
+FROM
+	DV_TUTORIAL.L10_RDV.HUB_CUSTOMER R;]]></string>
+		</script>
+		<form name="Report" id="Report-2193" template="Page" css="container-fluid" view="frame" >
+			<var name="samplePageNumber" type="4" value="0" mandatory="n" />
+			<var name="sampleRecordsPerPage" type="4" value="100" mandatory="n" />
+			<body name="Body" template="Grid" pos="0,0,0,0,f,f" layout="{{-2,-2,-2,-2,-1},{-2,-2,-2,-2}}" scroll="n" html="n" >
+				<cell type="label" name="Hub_customer Data" template="H3" pos="0,0,1,0,l,c" />
+				<cell type="chart" name="Pie" template="Pie" pos="0,1,4,1,l,c" max_records="20" >
+					<form_script type="DataSource" language="SQL" >
+						<var name="SHA1_HUB_CUSTOMER" type="-2" />
+						<var name="C_CUSTKEY" type="4" />
+						<var name="LDTS" type="93" />
+						<var name="RSCR" type="-1" />
+						<script ><![CDATA[SELECT * FROM DV_TUTORIAL.L10_RDV.HUB_CUSTOMER]]></script>
+					</form_script>
+					<param name="i0" value="RSCR" />
+					<param name="width" value="100%" />
+					<param name="v0" value="C_CUSTKEY" />
+					<param name="title" value="Sample Chart" />
+					<param name="height" value="400px" />
+				</cell>
+				<tableview name="sample" template="Table" css="table table-striped table-sm table-hover" pos="0,2,4,2,f,f" layout="{{-2,-2,-2,-2,-2},{-2,-2}}" scroll="n" html="n" header_rows="1" >
+					<form_script type="DataSource" language="SQL" >
+						<var name="SHA1_HUB_CUSTOMER" type="-2" />
+						<var name="C_CUSTKEY" type="4" />
+						<var name="LDTS" type="93" />
+						<var name="RSCR" type="-1" />
+						<script ><![CDATA[SELECT * FROM DV_TUTORIAL.L10_RDV.HUB_CUSTOMER]]></script>
+					</form_script>
+					<cell type="label" name="SHA1_HUB_CUSTOMER" pos="0,0,0,0,c,c" />
+					<cell type="label" name="C_CUSTKEY" pos="1,0,1,0,c,c" />
+					<cell type="label" name="LDTS" pos="2,0,2,0,c,c" />
+					<cell type="label" name="RSCR" pos="3,0,3,0,c,c" />
+					<cell type="label" name="Button can open other pages." pos="4,0,4,0,c,c" />
+					<cell type="label" name="${SHA1_HUB_CUSTOMER}" template="Plain" pos="0,1,0,1,l,c" />
+					<cell type="label" name="${C_CUSTKEY}" template="Plain" pos="1,1,1,1,l,c" />
+					<cell type="label" name="${LDTS}" template="Plain" pos="2,1,2,1,l,c" />
+					<cell type="label" name="${RSCR}" template="Plain" pos="3,1,3,1,l,c" />
+					<cell type="button" name="More" template="Plain" css="btn btn-sm btn-secondary" pos="4,1,4,1,c,c" ref_id="Report-2193" />
+				</tableview>
+				<cell type="href" name="" disabled="${samplePageNumber&lt;1}" pos="0,3,0,3,l,c" glyph="bi-chevron_double_left" ref_id="Report-2193" >
+					<var name="samplePageNumber" value="0" />
+				</cell>
+				<cell type="href" name="" disabled="${samplePageNumber&lt;1}" pos="1,3,1,3,l,c" glyph="bi-chevron_left" ref_id="Report-2193" >
+					<var name="samplePageNumber" value="${Math.max(0,samplePageNumber-1)}" />
+				</cell>
+				<cell type="label" name="Page ${samplePageNumber+1}" pos="2,3,2,3,l,c" />
+				<cell type="href" name="" disabled="${!sampleHasNextPage}" pos="3,3,3,3,l,c" glyph="bi-chevron_right" ref_id="Report-2193" >
+					<var name="samplePageNumber" value="${( samplePageNumber+1 )}" />
+				</cell>
+			</body>
+		</form>
+	</layout>
+</project>

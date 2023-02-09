@@ -1,4 +1,5 @@
-# Data_Vault Este repositorio contiene diverso material para el siguimiento de la clase "Data Vault 2.0" así como para la ampliación de los conceptos tratados en la misma. 
+# Data_Vault 2.0 Sesión 09 de Febrero 2023
+Este repositorio contiene diverso material para el siguimiento de la clase "Data Vault 2.0" así como para la ampliación de los conceptos tratados en la misma. 
 -Slides de la sesión
 -Modelos de DW en Drawio
 -Modelo Data Vault DbSchema
